@@ -274,3 +274,95 @@ Pengujian denda dilakukan dengan:
 Program GameZone Center telah menerapkan konsep Object-Oriented Programming menggunakan Python. Program memiliki empat class utama yang saling berinteraksi dan menerapkan Class & Object, Atribut & Method, serta Encapsulation & Property.
 
 Program juga telah melakukan pengujian terhadap instance method, class method, static method, getter, setter, validasi data, transaksi penyewaan, dan perhitungan denda.
+
+
+---
+
+# Posttest 2 — Penambahan Relasi UML & Inheritance
+
+## 8. Deskripsi Tambahan
+
+Pada posttest kedua ini, program GameZone Center dikembangkan dengan menambahkan dua konsep baru, yaitu Relasi UML (Asosiasi, Agregasi, Komposisi) dan Inheritance (Pewarisan).
+
+## 9. Relasi UML
+
+### 9.1 Asosiasi
+
+Relasi asosiasi diterapkan antara class `Pelanggan` dan class `Game` melalui atribut `game_favorit`.
+
+Pelanggan dapat menunjuk ke sebuah objek `Game` sebagai game favoritnya melalui method `pilih_game_favorit()`. Kedua objek tetap independen satu sama lain; objek `Game` tetap dapat digunakan meskipun tidak dijadikan favorit oleh pelanggan manapun, dan objek `Pelanggan` tetap dapat digunakan meskipun belum memilih game favorit.
+
+```python
+def pilih_game_favorit(self, game):
+    self.game_favorit = game
+```
+
+### 9.2 Agregasi
+
+Relasi agregasi diterapkan antara class `Konsol` dan class `Game` melalui atribut `daftar_game`.
+
+Objek `Game` dibuat secara terpisah di luar class `Konsol`, kemudian "dititipkan" ke konsol melalui method `tambah_game()`. Objek `Game` tersebut tetap dapat berdiri sendiri meskipun konsolnya dihapus atau diganti.
+
+```python
+def tambah_game(self, game):
+    self.daftar_game.append(game)
+```
+
+### 9.3 Komposisi
+
+Relasi komposisi diterapkan antara class `Penyewaan` dan class `NotaPembayaran`.
+
+Objek `NotaPembayaran` hanya dibuat di dalam method `bayar()` milik class `Penyewaan`, dan tidak pernah dibuat secara terpisah dari luar. Objek nota ini bersifat eksklusif, hanya ada selama transaksi penyewaannya ada.
+
+```python
+self.nota = NotaPembayaran(self.pelanggan.nama, self.__total_bayar)
+```
+
+## 10. Inheritance
+
+### 10.1 Superclass dan Subclass
+
+Class `Konsol` dijadikan superclass (parent class), dengan dua subclass (child class) yaitu `KonsolPlayStation` dan `KonsolNintendo`.
+
+* `KonsolPlayStation` memiliki atribut tambahan `jumlah_controller`.
+* `KonsolNintendo` memiliki atribut tambahan `mode_portable`.
+
+### 10.2 Penggunaan super()
+
+Setiap subclass memanggil constructor superclass menggunakan `super().__init__()` sebelum menambahkan atribut miliknya sendiri.
+
+```python
+def __init__(self, nama_konsol, tipe_konsol, stok, kode_servis, jumlah_controller):
+    super().__init__(nama_konsol, tipe_konsol, stok, kode_servis)
+    self.jumlah_controller = jumlah_controller
+```
+
+### 10.3 Method Overriding
+
+Method `tampilkan_info()` pada superclass `Konsol` di-override pada kedua subclass untuk menampilkan informasi tambahan yang berbeda-beda, dengan tetap memanggil method superclass menggunakan `super().tampilkan_info()`.
+
+### 10.4 Tingkat Akses pada Pewarisan
+
+Atribut `_stok` pada superclass `Konsol` dibuat protected agar dapat diakses dan dimanipulasi langsung oleh subclass, seperti pada method `servis_konsol()` milik `KonsolPlayStation`.
+
+Atribut `__kode_servis` dibuat private karena bersifat rahasia dan hanya digunakan di dalam superclass melalui method `cek_kode_servis()`.
+
+## 11. Pengujian Tambahan
+
+### 11.1 Pengujian Inheritance
+
+Objek `konsol1` dibuat dari subclass `KonsolPlayStation` dan `konsol2` dari subclass `KonsolNintendo`. Kedua objek tetap dikenali sebagai instance dari superclass `Konsol` melalui pengujian `isinstance()`.
+
+### 11.2 Pengujian Akses Protected pada Subclass
+
+Method `servis_konsol()` pada `KonsolPlayStation` mengakses dan mengubah atribut protected `_stok` milik superclass secara langsung, membuktikan bahwa subclass dapat memanipulasi data protected tanpa melalui property.
+
+### 11.3 Pengujian Relasi UML
+
+* Asosiasi diuji dengan memanggil `pilih_game_favorit()` pada objek `Pelanggan`.
+* Agregasi diuji dengan memanggil `tambah_game()` pada objek `Konsol`.
+* Komposisi diuji dengan memanggil `bayar()` pada objek `Penyewaan`, yang secara otomatis membuat objek `NotaPembayaran`.
+
+## 12. Kesimpulan Tambahan
+
+Program GameZone Center pada posttest kedua ini telah menerapkan konsep Relasi UML berupa Asosiasi, Agregasi, dan Komposisi, serta konsep Inheritance berupa superclass, subclass, penggunaan `super()`, method overriding, dan pengaturan tingkat akses protected dan private pada pewarisan.
